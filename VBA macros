@@ -1,0 +1,163 @@
+################################################################################################################################
+# Title:        Using VBA macros to generate heat map matrix
+# Programmer:   Mark Bounthavong
+# Date:         20 August 2018
+# Updated:      N/A
+# Updated by:   N/A
+################################################################################################################################
+
+################################################################################################################################
+# Description:
+# This was published as a blog on my website on 13 August 2018:
+# URL: https://mbounthavong.com/blog/2018/8/13/communicating-data-effectively-with-data-visualizations-part-10-heat-maps
+################################################################################################################################
+
+
+
+################################################################################################################################
+VISUAL BASIC FOR APPLICATION (VBA) MACRO
+################################################################################################################################
+The VBA macro comes from the site Excel For Beginners and written by Kristoff deCunha. We used the VBA code on the site, but modified it for this tutorial.
+URL: https://sites.google.com/site/excelforbeginners/Home/vba-codes/conditional-formatting-more-than-3-criterias
+
+The VBA code is written in a way where any changes in the values will automatically update the color of the cell. Additionally, the code also sorts the 2016 opioid overdose mortality rate in descending order, adds thin-white continuous borders around the cells, and changes the font to Times New Roman.
+
+Data for the heat map is from the CDC:
+https://www.cdc.gov/drugoverdose/data/statedeaths.html
+
+Excel macro-enabled workbook is located at:
+https://www.dropbox.com/home/marks%20blog/data%20viz%20series/part%2010/data/Exercise
+################################################################################################################################
+
+##############################################
+Macro 1 changes the font to Times New Roman.
+##############################################
+‘Macro1
+Sub ChangeFont()
+
+Dim rng As Range
+Set rng = Range("J1:N52")
+
+With rng.Font
+    .Name = "Times New Roman"
+    .Size = 12
+    .Strikethrough = False
+    .Superscript = False
+    .Subscript = False
+    .OutlineFont = False
+    .Shadow = False
+    .Underline = xlUnderlineStyleNone
+    .ThemeColor = xlThemeColorLight1
+    .TintAndShade = 0
+    .ThemeFont = xlThemeFontNone
+End With
+
+End Sub
+
+ 
+##############################################
+Macro 2 changes the cell shading to the 6-Color scale (blue-base)
+##############################################
+‘Macro2
+Sub ChangeCellColor()
+
+
+Dim rng As Range
+Dim oCell As Range
+
+Set rng = Range("K2:N52")
+
+For Each oCell In rng
+        Select Case oCell.Value
+                 Case 50 To 100
+                     oCell.Interior.Color = RGB(37, 54, 97)
+                     oCell.Font.Bold = True
+                     oCell.Font.Name = "Times New Roman"
+                     oCell.HorizontalAlignment = xlCenter
+                 Case 40 To 49.999
+                     oCell.Interior.Color = RGB(56, 83, 145)
+                     oCell.Font.Bold = True
+                     oCell.Font.Name = "Times New Roman"
+                     oCell.HorizontalAlignment = xlCenter
+                 Case 30 To 39.999
+                     oCell.Interior.Color = RGB(147, 168, 215)
+                     oCell.Font.Bold = True
+                     oCell.Font.Name = "Times New Roman"
+                     oCell.HorizontalAlignment = xlCenter
+                 Case 20 To 29.999
+                     oCell.Interior.Color = RGB(183, 198, 228)
+                     oCell.Font.Bold = True
+                     oCell.Font.Name = "Times New Roman"
+                     oCell.HorizontalAlignment = xlCenter
+                 Case 10 To 19.999
+                     oCell.Interior.Color = RGB(218, 225, 240)
+                     oCell.Font.Bold = True
+                     oCell.Font.Name = "Times New Roman"
+                     oCell.HorizontalAlignment = xlCenter
+                 Case 0 To 9.999
+                     oCell.Interior.Color = RGB(230, 237, 253)
+                     oCell.Font.Bold = True
+                     oCell.Font.Name = "Times New Roman"
+                     oCell.HorizontalAlignment = xlCenter
+                  Case Else
+                     oCell.Interior.ColorIndex = xlNone
+         End Select
+    Next oCell
+    
+End Sub
+
+ 
+##############################################
+Macro 3 sorts the 2016 opioid overdose mortality rates in descending order.
+##############################################
+‘Macro3
+Sub SortColumn()
+
+Dim DataRange As Range
+Dim keyRange As Range
+Set DataRange = Range("J1:N52")
+Set keyRange = Range("N1")
+DataRange.Sort Key1:=keyRange, Order1:=xlDescending
+
+End Sub
+
+ 
+##############################################
+Macro 4 hides the font from the heat map.
+##############################################
+‘Macro4
+Sub HideFont()
+    
+Dim rng As Range
+Dim oCell As Range
+
+Set rng = Range("K2:N52")
+
+    For Each oCell In rng
+        oCell.Font.Color = oCell.Interior.Color
+    Next oCell
+    
+End Sub
+
+ 
+##############################################
+Macro 5 creates thick white borders for each cell in the table.
+##############################################
+‘Macro5
+Sub WhiteOutlineCells()
+
+    Dim rng As Range
+
+    Set rng = Range("J1:N52")
+
+    With rng.Borders
+        .LineStyle = xlContinuous
+        .Color = vbWhite
+        .Weight = xlThick
+    End With
+    
+End Sub
+
+################################################################################################################################
+# END
+################################################################################################################################
